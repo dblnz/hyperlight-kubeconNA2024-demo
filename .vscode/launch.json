@@ -6,6 +6,12 @@
       "type": "promptString",
       "default": "./demo-main/demo-guest-debug",
       "description": "Path to the program to debug",
+    },
+    {
+      "id": "core_dump",
+      "type": "promptString",
+      "default": "./demo-main/demo-guest-debug.core",
+      "description": "Path to the core dump file",
     }
   ],
   "configurations": [
@@ -50,5 +56,33 @@
         }
       ]
     },
+    {
+         "name": "Lldb Core dump",
+         "type": "lldb",
+         "request": "launch",
+         "stopOnEntry": true,
+         "processCreateCommands": [],
+         "targetCreateCommands": [
+           "target create ${input:program} -c ${input:core_dump}",
+         ],
+       },
+       {
+         "name": "Gdb Core dump",
+         "type": "cppdbg",
+         "request": "launch",
+         "program": "${input:program}",
+         "coreDumpPath": "${input:core_dump}",
+         "cwd": "${workspaceFolder}",
+         "MIMode": "gdb",
+         "externalConsole": false,
+         "miDebuggerPath": "/usr/bin/gdb",
+         "setupCommands": [
+           {
+             "description": "Set Disassembly Flavor to Intel",
+             "text": "-gdb-set disassembly-flavor intel",
+             "ignoreFailures": true
+           }
+         ]
+       },
   ]
 }
